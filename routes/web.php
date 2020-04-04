@@ -23,3 +23,21 @@ Route::resource('/produk', 'ProductController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('/role', 'RoleController')->except([
+    'create', 'show', 'edit', 'update'
+]);
+Route::resource('/users', 'UserController')->except([
+	'show'
+]);
+Route::get('/users/roles/{id}', 'UserController@roles')->name('users.roles');
+Route::put('/users/roles/{id}', 'UserController@setRole')->name('users.set_role');
+Route::post('/users/permission', 'UserController@addPermission')->name('users.add_permission');
+Route::get('/users/role-permission', 'UserController@rolePermission')->name('users.roles_permission');
+Route::put('/users/permission/{role}', 'UserController@setRolePermission')->name('users.setRolePermission');
+Route::resource('/role', 'RoleController')->except(['create', 'show', 'edit', 'update']);
+Route::get('/test/permission/{permission}', function($permission){
+	$user = auth()->user()->find(3);
+	//$userHasRole = $user->hasRole('kasir');
+	$userHasPermission = $user->hasPermissionTo('show products');
+	dd($userHasPermission);
+});
