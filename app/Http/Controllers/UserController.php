@@ -64,7 +64,8 @@ class UserController extends Controller
         $password = !empty($request->password) ? bcrypt($request->password):$user->password;
         $user->update([
             'name' => $request->name,
-            'password' => $password
+            'password' => $password,
+            'status' => $request->status
         ]);
 
         return redirect(route('users.index'))->with(['success' => 'User: <strong>' . $user->name . '</strong> Diperbaharui']);
@@ -75,6 +76,11 @@ class UserController extends Controller
     	$user = User::findOrFail($id);
     	$user->delete();
     	return redirect()->back()->with(['success' => 'User</strong>' . $user->name . '</strong> Dihapus']);
+    }
+
+    public function logout()
+    {
+        return auth()->logout();
     }
 
     public function addPermission(Request $request)

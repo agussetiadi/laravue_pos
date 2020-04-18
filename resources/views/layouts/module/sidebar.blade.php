@@ -14,7 +14,7 @@
                 <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Daengweb.id</a>
+                <a href="#" class="d-block">{{auth()->user()->name}}</a>
             </div>
         </div>
 ​
@@ -86,6 +86,16 @@
                         <i class="fa fa-circle-o nav-icon"></i>
                         <p>Role Permission</p>
                     </a>
+                </li>
+                <li class="nav-item">
+                    <form>
+                        @csrf()
+                        @method('post')
+                        <a href="#" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Logout</p>
+                        </a>
+                    </form>
                 </li>
             </ul>
         </nav>

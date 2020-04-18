@@ -57,6 +57,14 @@
                                     <p class="text-danger">{{ $errors->first('email') }}</p>
                                 </div>
                                 <div class="form-group">
+                                    <label for="">Status</label>
+                                    <select class="form-control custom-select" name="status">
+                                        <option value="1" {{ $user->status ? 'selected' : '' }}>Aktif</option>
+                                        <option value="0" {{ ! $user->status ? 'selected' : '' }}>Inaktif</option>
+                                    </select>
+                                    <p class="text-danger">{{ $errors->first('status') }}</p>
+                                </div>
+                                <div class="form-group">
                                     <label for="">Password</label>
                                     <input type="password" name="password" 
                                         class="form-control {{ $errors->has('password') ? 'is-invalid':'' }}">
