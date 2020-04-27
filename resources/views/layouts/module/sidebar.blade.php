@@ -87,13 +87,22 @@
                         <p>Role Permission</p>
                     </a>
                 </li>
+                @role('kasir')
                 <li class="nav-item">
-                    <form>
+                    <a href="{{ route('order.transaksi') }}" class="nav-link">
+                        <i class="nav-icon fa fa-shopping-cart"></i>
+                        <p>
+                            Transaksi
+                        </p>
+                    </a>
+                </li>
+                @endrole
+                <li class="nav-item">
+                    <form action="/auth/logout" method="POST">
                         @csrf()
-                        @method('post')
                         <a href="#" class="nav-link">
                             <i class="fa fa-circle-o nav-icon"></i>
-                            <p>Logout</p>
+                            <button type="submit" class="bnt btn-primary" style="border: none; background-color: transparent; padding: 0;">Logout</button>
                         </a>
                     </form>
                 </li>

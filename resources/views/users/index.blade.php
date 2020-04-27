@@ -50,7 +50,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php $no = 1; @endphp
+                                        @php $no = $users->currentPage() * $users->perPage() - $users->perPage() + 1; @endphp
                                         @forelse ($users as $row)
                                         <tr>
                                             <td>{{ $no++ }}</td>
@@ -83,6 +83,9 @@
                                             <td colspan="4" class="text-center">Tidak ada data</td>
                                         </tr>
                                         @endforelse
+                                        <tr>
+                                            <td colspan="4" class="text-center">{{ $users->links() }}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

@@ -35,5 +35,14 @@ Route::group(['middleware' => 'auth'], function(){
 		//$userHasRole = $user->hasRole('kasir');
 		$userHasPermission = $user->hasPermissionTo('show products');
 	});
+
+	Route::group(['middleware' => ['role:kasir']], function(){
+		Route::get('/transaksi', 'OrderController@addOrder')->name('order.transaksi');
+	});
+
+	Route::post('/auth/logout', function(){
+		Auth::logout();
+		return redirect('/login');
+	});
 });
 

@@ -10,6 +10,11 @@ use Image;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:add category product')->only('store');
+    }
+
     public function index()
     {
     	$products = Product::orderby('created_at', 'DESC')->paginate(10);
