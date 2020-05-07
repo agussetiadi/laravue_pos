@@ -87,7 +87,7 @@
                         <p>Role Permission</p>
                     </a>
                 </li>
-                @role('kasir')
+                @role('kasir|admin')
                 <li class="nav-item">
                     <a href="{{ route('order.transaksi') }}" class="nav-link">
                         <i class="nav-icon fa fa-shopping-cart"></i>

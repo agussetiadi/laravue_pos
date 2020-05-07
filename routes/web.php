@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth'], function(){
 		$userHasPermission = $user->hasPermissionTo('show products');
 	});
 
-	Route::group(['middleware' => ['role:kasir']], function(){
+	Route::group(['middleware' => ['role:kasir|admin']], function(){
 		Route::get('/transaksi', 'OrderController@addOrder')->name('order.transaksi');
 	});
 
