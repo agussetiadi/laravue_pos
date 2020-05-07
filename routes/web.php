@@ -38,6 +38,8 @@ Route::group(['middleware' => 'auth'], function(){
 
 	Route::group(['middleware' => ['role:kasir|admin']], function(){
 		Route::get('/transaksi', 'OrderController@addOrder')->name('order.transaksi');
+		Route::get('/checkout', 'OrderController@checkout')->name('order.checkout');
+		Route::post('/checkout', 'OrderController@storeOrder')->name('order.storeOrder');
 	});
 
 	Route::post('/auth/logout', function(){

@@ -59687,12 +59687,31 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       qty: 1
     },
     shoppingCart: [],
-    submitCart: false
+    submitCart: false,
+    customer: {
+      email: ''
+    },
+    formCustomer: false,
+    resultStatus: false,
+    submitForm: false,
+    errorMessage: '',
+    message: ''
   },
   watch: {
     'product.id': function productId() {
       if (this.product.id) {
         this.getProduct();
+      }
+    },
+    'customer.email': function customerEmail() {
+      this.formCustomer = false;
+
+      if (this.customer.name != '') {
+        this.customer = {
+          name: '',
+          phone: '',
+          address: ''
+        };
       }
     }
   },
@@ -59770,6 +59789,70 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
           });
         }
       });
+    },
+    searchCustomer: function searchCustomer() {
+      var _this6 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/customer/search', {
+        email: this.customer.email
+      }).then(function (response) {
+        if (response.data.status == 'success') {
+          _this6.customer = response.data.data;
+          _this6.resultStatus = true;
+        }
+
+        _this6.formCustomer = true;
+      })["catch"](function (error) {});
+    },
+    sendOrder: function sendOrder() {
+      var _this7 = this;
+
+      this.errorMessage = '';
+      this.message = '';
+
+      if (this.customer.email != '' && this.customer.name != '' && this.customer.phone != this.customer.address != '') {
+        this.$swal({
+          title: 'kamu yakin?',
+          text: 'kamu tidak dapat mengembalikan tindakan ini',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Iya lanjutkan',
+          cancelButtonText: 'tidak, batalkan',
+          showCloseButton: true,
+          showLoaderConfirm: true,
+          preConfirm: function preConfirm() {
+            return new Promise(function (resolve) {
+              setTimeout(function () {
+                resolve();
+              }, 1000);
+            });
+          },
+          allowOutsideClick: function allowOutsideClick() {
+            return !_this7.$swal.isLoading();
+          }
+        }).then(function (result) {
+          if (result.value) {
+            _this7.submitForm = true;
+            axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('checkout', _this7.customer).then(function (response) {
+              setTimeout(function () {
+                _this7.getCart();
+
+                _this7.message = response.data.message;
+                _this7.customer = {
+                  name: '',
+                  phone: '',
+                  address: ''
+                };
+                _this7.submitForm = false;
+              }, 1000);
+            });
+          }
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      } else {
+        this.errorMessage = 'Masih ada inputan yang kosong';
+      }
     }
   }
 });
