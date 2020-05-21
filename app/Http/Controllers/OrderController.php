@@ -10,11 +10,13 @@ use App\Customer;
 use App\User;
 use Cookie;
 use DB;
+use PDF;
 use Carbon\Carbon;
+use App\Exports\OrderInvoice;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         //MENGAMBIL DATA CUSTOMER
         $customers = Customer::orderBy('name', 'ASC')->get();
@@ -113,15 +115,22 @@ class OrderController extends Controller
         return $data;
     }
 
-    public function invoicePdf($invoice)
-    {
-
-    }
-    ​
     public function invoiceExcel($invoice)
     {
-
+        return (new OrderInvoice($invoice))->download('invoice-' . $invoice . '.xlsx');
     }
+
+    public function invoicePdf($invoice)
+    {
+    //MENGAMBIL DATA TRANSAKSI BERDASARKAN INVOICE
+    $order = Order::where('invoice', $invoice)
+                ->with('customer', 'order_detail', 'order_detail.product')->first();
+    //SET CONFIG PDF MENGGUNAKAN FONT SANS-SERIF
+    //DENGAN ME-LOAD VIEW INVOICE.BLADE.PHP
+    $pdf = PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif'])
+            ->loadView('orders.report.invoice', compact('order'));
+    return $pdf->stream();
+}
 
     public function addOrder()
     {
@@ -259,7 +268,7 @@ class OrderController extends Controller
             //jika ada error, maka akan dirollback sehingga tidak ada data yang tersimpan 
             DB::rollback();
             //pesan gagal akan di-return
-            return response()->json([
+            return response([
                 'status' => 'failed',
                 'message' => $e->getMessage()
             ], 400);
@@ -276,8 +285,9 @@ class OrderController extends Controller
             $order = $order->first();
             //explode invoice untuk mendapatkan angkanya
             $explode = explode('-', $order->invoice);
+            $explode = $explode[1] + 1;
             //angka dari hasil explode di +1
-            return 'INV-' . $explode[1] + 1;
+            return 'INV-' . $explode;
         }
         //jika belum terdapat records maka akan me-return INV-1
         return 'INV-1';
